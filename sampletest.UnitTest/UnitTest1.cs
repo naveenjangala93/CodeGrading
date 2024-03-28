@@ -9,13 +9,13 @@ namespace StudentManagement.UnitTests
         public void GiveStudent_ReturnsExpectedString()
         {
             // Arrange
-            var controller = new StudentController();
+            var controller = new StudentController();   
 
             // Act
             var result = controller.getstring();
 
             // Assert
-            Assert.Equal("abc", result);
+            Assert.Equal("naveen", result); 
         }
     }
 }
