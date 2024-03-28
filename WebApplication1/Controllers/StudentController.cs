@@ -13,6 +13,7 @@ namespace WebApplication1.Controllers
         public StudentController(IStudentservice stdser) {
             _std= stdser;
         }
+        public StudentController() { }
         [HttpGet]
         [Route("getAll")]
         public async Task<List<Student>> getnames()
@@ -32,9 +33,13 @@ namespace WebApplication1.Controllers
         {
             return await _std.updateStd(id, student);
         }
-
-
-
+        [HttpGet]
+        [Route("sampleget")]
+        public String getstring()
+        {
+            return "naveen";
+            
+        }
         /*// StudentService stdser = new StudentService();
          [HttpGet]
          [Route("StudentsStartsWith")]
