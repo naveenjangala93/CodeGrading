@@ -26,7 +26,7 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: 'test'
-    projects: '**/*sampletest.UnitTest.csproj'
+    projects: '**/*[s].UnitTest.csproj'
     arguments: '--configuration release --output $(Build.ArtifactStagingDirectory)'
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact'
