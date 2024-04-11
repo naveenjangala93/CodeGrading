@@ -15,7 +15,7 @@ namespace StudentManagement.UnitTests
             var result = controller.getstring();
 
             // Assert
-            Assert.Equal("naveen123", result);
+            Assert.Equal("naveen", result);
         }
     }
 }
