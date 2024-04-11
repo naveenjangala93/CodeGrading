@@ -25,40 +25,28 @@ steps:
   inputs:
     command: 'test'
     projects: '**/[Tt]ests/*.csproj'
-    # arguments: '--configuration release --output $(Build.ArtifactStagingDirectory) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura'
-    # publishTestResults: true
     arguments: '--configuration $(BuildConfiguration) --collect:"Code coverage"'
     publishTestResults: true
     publishCodeCoverage: true
   
-# - task: PublishCodeCoverageResults@2
-#   inputs:
-#     # codeCoverageTool: 'Cobertura'
-#     summaryFileLocation: '/*coverage.cobertura.xml'
-
 - task: PublishCodeCoverageResults@1
   inputs:
-    codeCoverageTool: 'Cobertura'  # Specify the code coverage tool you're using
-    summaryFileLocation: '**/coverage.xml'  # Specify the location of your coverage report
-
+    codeCoverageTool: 'Cobertura'
+    summaryFileLocation: '$(Build.SourcesDirectory)/**/*.xml' # Update this to match your code coverage report location
 
 - task: PublishTestResults@2
   inputs:
-    testResultsFiles: '**/*.trx'  # Specify the location of your test result files
-    searchFolder: '$(System.DefaultWorkingDirectory)'  # Specify the folder to search for test result files
-    testRunTitle: 'Test Run'  # Specify a title for the test run
-    
+    testResultsFiles: '$(System.DefaultWorkingDirectory)/**/*.trx' # Update this to match your test result file location
+    searchFolder: '$(System.DefaultWorkingDirectory)'
+    testRunTitle: 'Test Run'
+
 - task: DotNetCoreCLI@2
   inputs:
     command: 'publish'
     publishWebProjects: false
     projects: '**/*.csproj'
     arguments: '--configuration release --output $(Build.ArtifactStagingDirectory) '
-    
-# - task: CopyFiles@2
-#   inputs:
-#     Contents: '/*.dll'
-#     TargetFolder: '$(build.artifactstagingdirectory)'
+
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
