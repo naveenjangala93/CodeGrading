@@ -1,40 +1,54 @@
+#Testing about CI
+
 trigger:
 - main
 
 pool:
-  vmImage: ubuntu-latest
-
-variables:
-  buildConfiguration: 'Release'
+  vmImage: 'windows-latest'
 
 steps:
+- powershell: |
+    $filePath = "Common"
+    if (-not (Test-Path $filePath)) {
+        Write-Output "The file '$filePath' does not exist."
+        exit 1  # Fail the task
+    } else {
+        Write-Output "The file '$filePath' exists."
+    }
+  displayName: 'Check File Existence'
 - task: DotNetCoreCLI@2
-  displayName: 'Restore'
-  inputs:
-    command: 'restore'
-    projects: '**/*.csproj'
-
-- task: DotNetCoreCLI@2
-  displayName: 'Build'
   inputs:
     command: 'build'
-    projects: '**/*.csproj'
-    arguments: '--configuration $(buildConfiguration)'
+    projects: '/*.csproj'
 
 - task: DotNetCoreCLI@2
   inputs:
     command: 'test'
-    projects: '**/*[Tt]est.csproj'
-    arguments: '--configuration release --output $(Build.ArtifactStagingDirectory)'
+    projects: '/[Tt]ests/*.csproj'
+    # arguments: '--configuration release --output $(Build.ArtifactStagingDirectory) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura'
+    # publishTestResults: true
+    arguments: '--configuration $(BuildConfiguration) --collect:"Code coverage"'
+    publishTestResults: true
+    publishCodeCoverage: true
+  
+- task: PublishCodeCoverageResults@2
+  inputs:
+    # codeCoverageTool: 'Cobertura'
+    summaryFileLocation: '/*coverage.cobertura.xml'
+    
 - task: DotNetCoreCLI@2
-  displayName: 'Publish'
   inputs:
     command: 'publish'
+    publishWebProjects: false
     projects: '**/*.csproj'
-    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-
+    arguments: '--configuration release --output $(Build.ArtifactStagingDirectory) '
+    
+# - task: CopyFiles@2
+#   inputs:
+#     Contents: '/*.dll'
+#     TargetFolder: '$(build.artifactstagingdirectory)'
 - task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact'
   inputs:
-    pathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    artifactName: 'published_files'
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'dll_file'
+    publishLocation: 'Container'
