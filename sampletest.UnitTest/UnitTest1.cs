@@ -15,9 +15,13 @@ namespace StudentManagement.UnitTests
             var result = controller.getstring();
 
             // Assert
+<<<<<<< HEAD
 
     
             Assert.Equal("naveen123", result);
+=======
+            Assert.Equal("naveen", result);
+>>>>>>> 3ee7f2c11a9df26c5b1bf5168e53287d36117054
         }
     }
 }
