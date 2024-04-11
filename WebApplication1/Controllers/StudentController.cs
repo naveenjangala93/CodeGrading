@@ -40,6 +40,13 @@ namespace WebApplication1.Controllers
             return "naveen";
             
         }
+
+        [HttpGet]
+        [Route("sample")]
+        public int getnumber()
+        {
+            return 5;
+        }
         /*// StudentService stdser = new StudentService();
          [HttpGet]
          [Route("StudentsStartsWith")]
