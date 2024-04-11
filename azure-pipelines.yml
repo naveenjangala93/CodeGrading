@@ -40,7 +40,7 @@ steps:
   inputs:
     command: 'publish'
     publishWebProjects: false
-    projects: '**/*.csproj'
+    projects: '/*.csproj'
     arguments: '--configuration release --output $(Build.ArtifactStagingDirectory) '
     
 # - task: CopyFiles@2
