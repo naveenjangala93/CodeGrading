@@ -31,10 +31,22 @@ steps:
     publishTestResults: true
     publishCodeCoverage: true
   
-- task: PublishCodeCoverageResults@2
+# - task: PublishCodeCoverageResults@2
+#   inputs:
+#     # codeCoverageTool: 'Cobertura'
+#     summaryFileLocation: '/*coverage.cobertura.xml'
+
+- task: PublishCodeCoverageResults@1
   inputs:
-    # codeCoverageTool: 'Cobertura'
-    summaryFileLocation: '/*coverage.cobertura.xml'
+    codeCoverageTool: 'Cobertura'  # Specify the code coverage tool you're using
+    summaryFileLocation: '**/coverage.xml'  # Specify the location of your coverage report
+
+
+- task: PublishTestResults@2
+  inputs:
+    testResultsFiles: '**/*.trx'  # Specify the location of your test result files
+    searchFolder: '$(System.DefaultWorkingDirectory)'  # Specify the folder to search for test result files
+    testRunTitle: 'Test Run'  # Specify a title for the test run
     
 - task: DotNetCoreCLI@2
   inputs:
