@@ -24,7 +24,7 @@ steps:
     targetType: inline
     script: |
         # Define the URL for the POST request
-        $uri = "https://codeanalysis.azurewebsites.net/CodeAnalysis/ValidateData"
+        $uri = "https://codeanalysis.azurewebsites.net/CodeAnalysis/Post"
 
         # Define the JSON payload to send in the request body
         $jsonPayload = @{
