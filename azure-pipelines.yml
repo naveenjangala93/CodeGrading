@@ -46,42 +46,14 @@ steps:
 #         }
   
   
+
 - task: PowerShell@2
-  inputs:
-    targetType: 'inline'
+  inputs: 
+    targetType: inline
     script: |
-      # Define the base URL of the API
-      $baseUri = "https://codeanalysis.azurewebsites.net/CodeAnalysis/Post"
-      
-      # Define the data to send
-      $data = @{
-          name = "naveen"
-          age = "20"
-      }
-
-      # Construct the query string
-      $queryString = [System.Web.HttpUtility]::ParseQueryString("")
-      foreach ($key in $data.Keys) {
-          $queryString.Set($key, $data[$key])
-      }
-      
-      # Combine the base URL with the query string
-      $uri = $baseUri + "?" + $queryString.ToString()
-
-      # Send the GET request
-      try {
-          $response = Invoke-RestMethod -Uri $uri -Method Get
-          
-          # Check if the response contains valid data
-          if ($response) {
-              Write-Host "Data is valid. Response: $($response | ConvertTo-Json -Depth 5)"
-          } else {
-              Write-Host "No data received or invalid response."
-          }
-      } catch {
-          Write-Host "Error occurred: $_"
-      }
-
+        $uri = "https://codeanalysis.azurewebsites.net/CodeAnalysis/Post?age=29&name=nithih"
+        $response = Invoke-RestMethod -Uri $uri -Method Post
+        echo $response 
 - task: DotNetCoreCLI@2
   inputs:
     command: 'build'
