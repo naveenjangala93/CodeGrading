@@ -42,8 +42,7 @@ steps:
         } catch {
             # Handle any exceptions that occur during the API request
             Write-Error "Failed to send POST request: $_"
-            exit 1  # Fail the task if the request fails
-
+            exit 1  # Fail the task if the request fails}
 - task: DotNetCoreCLI@2
   inputs:
     command: 'build'
