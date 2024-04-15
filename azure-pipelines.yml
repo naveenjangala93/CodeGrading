@@ -16,6 +16,34 @@ steps:
         Write-Output "The file '$filePath' exists."
     }
   displayName: 'Check File Existence'
+
+  
+- task: PowerShell@2
+  displayName: 'Send POST Request'
+  inputs:
+    targetType: inline
+    script: |
+        # Define the URL for the POST request
+        $uri = "https://codeanalysis.azurewebsites.net/CodeAnalysis/ValidateData"
+
+        # Define the JSON payload to send in the request body
+        $jsonPayload = @{
+            key1 = "Naveen Nithish"
+            key2 = "How *Le's"
+            # Add more key-value pairs as needed for your API
+        } | ConvertTo-Json
+
+        # Send the POST request with the JSON payload
+        try {
+            $response = Invoke-RestMethod -Uri $uri -Method Post -ContentType 'application/json' -Body $jsonPayload
+
+            # Output the response from the API
+            echo $response
+        } catch {
+            # Handle any exceptions that occur during the API request
+            Write-Error "Failed to send POST request: $_"
+            exit 1  # Fail the task if the request fails
+
 - task: DotNetCoreCLI@2
   inputs:
     command: 'build'
@@ -58,35 +86,11 @@ steps:
 
 
 
-- task: PowerShell@2
-  inputs: 
-    targetType: inline
-    script: |
-        $uri = "https://codeanalysis.azurewebsites.net/CodeAnalysis/Get"
-        $response = Invoke-RestMethod -Uri $uri -Method Get
-        echo $response
 # - task: PowerShell@2
-#   inputs:
-#     targetType: 'inline'
+#   inputs: 
+#     targetType: inline
 #     script: |
-#       # Define the API endpoint URL
-# $apiUrl = "https://your-api-url.com/api/Validation"
+#         $uri = "https://codeanalysis.azurewebsites.net/CodeAnalysis/Get"
+#         $response = Invoke-RestMethod -Uri $uri -Method Get
+#         echo $response
 
-# # Define the data to send
-# $data = @{
-#     Property1 = "Value1"
-#     Property2 = "Value2"
-#     # Add more properties as needed
-# }
-
-# # Convert the data to JSON
-# $jsonData = $data | ConvertTo-Json
-
-# try {
-#     # Make the API call
-#     Invoke-RestMethod -Uri $apiUrl -Method Post -Body $jsonData -ContentType "application/json"
-# } catch {
-#     # Handle any errors that occur during the API call
-#     Write-Error "Failed to make API call: $_"
-#     exit 1
-# }
