@@ -18,32 +18,70 @@ steps:
   displayName: 'Check File Existence'
 
   
+# - task: PowerShell@2
+#   displayName: 'Send POST Request'
+#   inputs:
+#     targetType: inline
+#     script: |
+#         # Define the URL for the POST request
+#         $uri = "https://codeanalysis.azurewebsites.net/CodeAnalysis/Post"
+
+#         # Define the JSON payload to send in the request body
+#         $jsonPayload = @{
+#             key1 = "Naveen Nithish"
+#             key2 = "How *Le's"
+#             # Add more key-value pairs as needed for your API
+#         } | ConvertTo-Json
+
+#         # Send the POST request with the JSON payload
+#         try {
+#             $response = Invoke-RestMethod -Uri $uri -Method Post -ContentType 'application/json' -Body $jsonPayload
+
+#             # Output the response from the API
+#             echo $response
+#         } catch {
+#             # Handle any exceptions that occur during the API request
+#             Write-Error "Failed to send POST request: $_"
+#             exit 1  # Fail the task if the request fails
+#         }
+  
+  
 - task: PowerShell@2
-  displayName: 'Send POST Request'
   inputs:
-    targetType: inline
+    targetType: 'inline'
     script: |
-        # Define the URL for the POST request
-        $uri = "https://codeanalysis.azurewebsites.net/CodeAnalysis/Post"
+      # Define the base URL of the API
+      $baseUri = "https://codeanalysis.azurewebsites.net/CodeAnalysis/Post"
+      
+      # Define the data to send
+      $data = @{
+          name = "naveen"
+          age = "20"
+      }
 
-        # Define the JSON payload to send in the request body
-        $jsonPayload = @{
-            key1 = "Naveen Nithish"
-            key2 = "How *Le's"
-            # Add more key-value pairs as needed for your API
-        } | ConvertTo-Json
+      # Construct the query string
+      $queryString = [System.Web.HttpUtility]::ParseQueryString("")
+      foreach ($key in $data.Keys) {
+          $queryString.Set($key, $data[$key])
+      }
+      
+      # Combine the base URL with the query string
+      $uri = $baseUri + "?" + $queryString.ToString()
 
-        # Send the POST request with the JSON payload
-        try {
-            $response = Invoke-RestMethod -Uri $uri -Method Post -ContentType 'application/json' -Body $jsonPayload
+      # Send the GET request
+      try {
+          $response = Invoke-RestMethod -Uri $uri -Method Get
+          
+          # Check if the response contains valid data
+          if ($response) {
+              Write-Host "Data is valid. Response: $($response | ConvertTo-Json -Depth 5)"
+          } else {
+              Write-Host "No data received or invalid response."
+          }
+      } catch {
+          Write-Host "Error occurred: $_"
+      }
 
-            # Output the response from the API
-            echo $response
-        } catch {
-            # Handle any exceptions that occur during the API request
-            Write-Error "Failed to send POST request: $_"
-            exit 1  # Fail the task if the request fails
-        }
 - task: DotNetCoreCLI@2
   inputs:
     command: 'build'
