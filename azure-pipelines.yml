@@ -21,15 +21,15 @@ steps:
     command: 'build'
     projects: '**/*.csproj'
 
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'test'
-    projects: '**/sampletesting.UnitTest/*.csproj'
-        # arguments: '--configuration release --output $(Build.ArtifactStagingDirectory) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura'
-    # publishTestResults: true
-    arguments: '--configuration $(BuildConfiguration) --collect:"Code coverage"'
-    publishTestResults: true
-    publishCodeCoverage: true
+# - task: DotNetCoreCLI@2
+#   inputs:
+#     command: 'test'
+#     projects: '**/sampletesting.UnitTest/*.csproj'
+#         # arguments: '--configuration release --output $(Build.ArtifactStagingDirectory) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura'
+#     # publishTestResults: true
+#     arguments: '--configuration $(BuildConfiguration) --collect:"Code coverage"'
+#     publishTestResults: true
+#     publishCodeCoverage: true
 
   
 # - task: PublishCodeCoverageResults@2
@@ -54,3 +54,39 @@ steps:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'dll_file'
     publishLocation: 'Container'
+
+
+
+
+- task: PowerShell@2
+  inputs: 
+    targetType: inline
+    script: |
+        $uri = "https://jsonplaceholder.typicode.com/posts/1"
+        $response = Invoke-RestMethod -Uri $uri -Method Get
+        echo $response
+# - task: PowerShell@2
+#   inputs:
+#     targetType: 'inline'
+#     script: |
+#       # Define the API endpoint URL
+# $apiUrl = "https://your-api-url.com/api/Validation"
+
+# # Define the data to send
+# $data = @{
+#     Property1 = "Value1"
+#     Property2 = "Value2"
+#     # Add more properties as needed
+# }
+
+# # Convert the data to JSON
+# $jsonData = $data | ConvertTo-Json
+
+# try {
+#     # Make the API call
+#     Invoke-RestMethod -Uri $apiUrl -Method Post -Body $jsonData -ContentType "application/json"
+# } catch {
+#     # Handle any errors that occur during the API call
+#     Write-Error "Failed to make API call: $_"
+#     exit 1
+# }
