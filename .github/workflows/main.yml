@@ -1,27 +1,33 @@
-name: Static Code Analysis
+name: CI/CD Workflow
 
-on:
-  push:
-    branches:
-      - main
-      - master
-      - '**/feature/**'
+on: [push]
 
 jobs:
-  static-code-analysis:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
+    - name: Checkout code 
       uses: actions/checkout@v2
 
-    - name: Install curl
-      run: sudo apt-get install -y curl
-
-    - name: Perform Static Code Analysis
+    - name: Send POST request for static code analysis
+      env:
+        OWNER: ${{ github.repository_owner }}
+        REPO: ${{ github.event.repository.name }}
+        TOKEN: ${{ secrets.PAT_TOKEN }}
       run: |
-        RESPONSE=$(curl -s -o response.txt -w "%{http_code}" -X POST "https://codeanalysis.azurewebsites.net/CodeAnalysis/PerfromStaticCodeAnalysis?owner=naveenjangala93&repo=StudentManagement&token=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")
+        response=$(curl -X POST "https://codeanalysis.azurewebsites.net/CodeAnalysis/PerfromStaticCodeAnalysis?owner=${OWNER}&repo=${REPO}&token=${TOKEN}")
+        echo "Response: $response"
+        result=$(echo $response | jq '.result')
+        if [ "$result" != "true" ]; then
+          echo "Static code analysis failed."
+          exit 1
+        fi
+        echo "Static code analysis passed."
+      shell: bash
 
-        echo "HTTP Response Code: $RESPONSE"
-        echo "API Response:"
-        cat response.txt
+    - name: Further build steps
+      if: success()
+      run: |
+        echo "Performing further build steps..."
+        # Add your build commands here
