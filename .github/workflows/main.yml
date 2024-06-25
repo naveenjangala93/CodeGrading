@@ -20,10 +20,8 @@ jobs:
 
     - name: Perform Static Code Analysis
       run: |
-        curl -X POST "https://codeanalysis.azurewebsites.net/CodeAnalysis/PerfromStaticCodeAnalysis" \
-        -H "Content-Type: application/json" \
-        -d '{
-              "owner": "naveenjangala93",
-              "repo": "StudentManagement",
-              "token": "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"
-            }'
+        RESPONSE=$(curl -s -o response.txt -w "%{http_code}" -X POST "https://codeanalysis.azurewebsites.net/CodeAnalysis/PerfromStaticCodeAnalysis?owner=naveenjangala93&repo=StudentManagement&token=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")
+
+        echo "HTTP Response Code: $RESPONSE"
+        echo "API Response:"
+        cat response.txt
