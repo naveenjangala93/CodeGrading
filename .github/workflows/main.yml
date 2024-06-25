@@ -1,0 +1,29 @@
+name: Static Code Analysis
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - '**/feature/**'
+
+jobs:
+  static-code-analysis:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Install curl
+      run: sudo apt-get install -y curl
+
+    - name: Perform Static Code Analysis
+      run: |
+        curl -X POST "https://codeanalysis.azurewebsites.net/CodeAnalysis/PerfromStaticCodeAnalysis" \
+        -H "Content-Type: application/json" \
+        -d '{
+              "owner": "naveenjangala93",
+              "repo": "StudentManagement",
+              "token": "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"
+            }'
